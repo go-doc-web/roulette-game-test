@@ -1,4 +1,10 @@
-export const ROULETTE_COLORS = ["red", "black", "green", "jocker"] as const;
+export const ROULETTE_COLORS = [
+  "red",
+  "black",
+  "green",
+  "jockerBlack",
+  "jockerRed",
+] as const;
 
 export type CellColor = (typeof ROULETTE_COLORS)[number];
 

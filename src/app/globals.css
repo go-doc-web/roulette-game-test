@@ -6,8 +6,15 @@
   --dark-1: #151619;
   --dark-2: #23262c;
   --dark-3: #2d323c;
+  --dark-4: #343843;
+
+  --fishka-red: #ff4242;
 }
 
 * {
   box-sizing: border-box;
+}
+
+body {
+  margin: 0;
 }
