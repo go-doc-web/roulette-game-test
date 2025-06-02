@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --dark-1: #151619;
+  --dark-2: #23262c;
+  --dark-3: #2d323c;
+}
+
+* {
+  box-sizing: border-box;
+}
