@@ -16,5 +16,14 @@ function generateRouletteSequence(count: number = 40): Cell[] {
 export async function GET() {
   const sequence = generateRouletteSequence(40);
 
-  return NextResponse.json({ sequence });
+  if (sequence.length === 0) {
+    return NextResponse.json({ error: "Empty roulette" }, { status: 500 });
+  }
+
+  const winnerIndex = Math.floor(Math.random() * sequence.length);
+  const winner = sequence[winnerIndex];
+
+  // console.log({ sequence, winnerIndex, winner });
+
+  return NextResponse.json({ sequence, winnerIndex, winner });
 }
