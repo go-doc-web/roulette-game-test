@@ -17,7 +17,7 @@ export default function BlackSvg() {
       <path
         d="M0 8C0 2.47715 4.47715 -2 10 -2H90C95.5229 -2 100 2.47715 100 8C100 4.68629 96.4183 2 92 2H8C3.58172 2 0 4.68629 0 8ZM100 100H0H100ZM0 100V0V100ZM100 0V100V0Z"
         fill="white"
-        fill-opacity="0.2"
+        fillOpacity="0.2"
         mask="url(#path-1-inside-1_0_2725)"
       />
       <path

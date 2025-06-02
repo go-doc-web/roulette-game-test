@@ -1,4 +1,4 @@
-import RouletteSlider from "@/componets/RouletteSlider";
+import RouletteSlider from "@/components/RouletteSlider";
 import { Cell, ROULETTE_COLORS } from "../types/index";
 
 const testCells: Cell[] = Array.from({ length: 25 }, (_, i) => ({
