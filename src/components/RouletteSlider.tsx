@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { animate, motion } from "framer-motion";
 import clsx from "clsx";
 import RedSvg from "./ui/RedSvg";
 import BlackSvg from "./ui/BlackSvg";
@@ -21,11 +22,19 @@ const placeholderChips = (
   </div>
 );
 
-export default function RouletteSlider({ cells }: RouletteSliderProps) {
+export default function RouletteSlider({
+  cells,
+  winnerIndex,
+}: RouletteSliderProps) {
   return (
     <div className="relative w-full  ">
       <div className="absolute inset-y-0 left-1/2 w-1 border-l-4 border-yellow-300 z-10"></div>
-      <ul className="flex gap-2 animate-none py-[8px]">
+      <motion.ul
+        className="flex gap-2 animate-none py-[8px]"
+        initial={{ x: 0 }}
+        animate={{ x: -1440 }}
+        transition={{ duration: 5, ease: "easeInOut" }}
+      >
         {cells.map((cell) => (
           <li
             key={cell.id}
@@ -34,7 +43,7 @@ export default function RouletteSlider({ cells }: RouletteSliderProps) {
             {iconMap[cell.color] ?? placeholderChips}
           </li>
         ))}
-      </ul>
+      </motion.ul>
     </div>
   );
 }
