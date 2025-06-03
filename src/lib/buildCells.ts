@@ -1,9 +1,8 @@
-import { Cell } from "../types/index";
-import { rouletteSequence } from "./rouletteSequence";
+import { Cell, CellColor } from "../types/index";
 
-export default function buildCells(): Cell[] {
-  return rouletteSequence.map((sequence, index) => ({
+export default function buildCells(sequence: CellColor[]): Cell[] {
+  return sequence.map((color, index) => ({
     id: index,
-    color: sequence,
+    color: color,
   }));
 }
