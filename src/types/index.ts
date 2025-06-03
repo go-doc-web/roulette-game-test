@@ -15,4 +15,5 @@ export type Cell = {
 
 export interface RouletteSliderProps {
   cells: Cell[];
+  error?: string | null; // залишу поки так
 }
