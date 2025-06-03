@@ -1,0 +1,24 @@
+import { CellColor } from "../types/index";
+
+export const rouletteSequence: CellColor[] = [
+  "red",
+  "black",
+  "red",
+  "black",
+  "green",
+  "red",
+  "black",
+  "black",
+  "red",
+  "black",
+  "green",
+  "red",
+  "jockerBlack",
+  "black",
+  "red",
+  "black",
+  "red",
+  "black",
+  "jockerRed",
+  "red",
+];
