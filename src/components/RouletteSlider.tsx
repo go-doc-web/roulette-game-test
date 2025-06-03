@@ -16,6 +16,7 @@ const iconMap = {
 };
 
 export default function RouletteSlider({ cells }: RouletteSliderProps) {
+  console.log("cells", cells);
   const placeholderChips = (
     <div className="border-t-2 bg-yellow-500 border-solid border-white/20 w-[100px] h-[100px] flex items-center justify-center rounded-[0.5rem] text-red-500 text-3xl font-bold">
       ?
