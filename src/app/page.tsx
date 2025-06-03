@@ -1,7 +1,8 @@
 import RouletteSlider from "../components/RouletteSlider";
 
 export default async function Home() {
-  const res = await fetch("http://localhost:3000/api/roulette", {
+  const API_BASE_URL: string | undefined = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const res = await fetch(`${API_BASE_URL}/api/roulette`, {
     cache: "no-store",
   });
   const testCells = await res.json();
