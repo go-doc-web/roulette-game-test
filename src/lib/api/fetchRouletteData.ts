@@ -38,7 +38,7 @@ export default async function fetchRouletteData(): Promise<FetchRouletteResult> 
     }
     return {
       sequence: [],
-      winnerIndex: null,
+      winnerIndex: 0,
       error: errorMessage,
     };
   }
