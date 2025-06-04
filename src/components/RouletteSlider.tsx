@@ -62,7 +62,7 @@ export default function RouletteSlider({
         }}
       >
         {formatedCells.map((cell, index) => {
-          const isWinner = cell.id === winner.id;
+          // const isWinner = cell.id === winner.id;
           return (
             <li
               key={`${Math.floor(index / cells.length)}-${cell.id}`}
