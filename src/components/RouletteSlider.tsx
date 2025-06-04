@@ -32,7 +32,7 @@ export default function RouletteSlider({
   const [xOffset, setXOffset] = useState<number>(0);
 
   const formatedCells = useMemo(() => {
-    return [...cells, ...cells, ...cells];
+    return [...cells, ...cells, ...cells, ...cells];
   }, [cells]);
 
   useEffect(() => {
