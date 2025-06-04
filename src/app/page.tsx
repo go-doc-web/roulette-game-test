@@ -9,7 +9,10 @@ export default async function Home() {
   return (
     <main className="w-full h-[100vh]  ">
       <section className="py-4 ">
-        <div className="w-[1440px]  mx-auto overflow-hidden relative ">
+        <div
+          className="w-[1280px]  mx-auto relative  z-30 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0  after:top-0
+                 after:bg-[var(--bg-list)]"
+        >
           <RouletteSlider cells={sequence} winnerIndex={winnerIndex} />
         </div>
       </section>

@@ -32,11 +32,11 @@ export default function RouletteSlider({
   const [xOffset, setXOffset] = useState<number>(0);
 
   const formatedCells = useMemo(() => {
-    return [...cells, ...cells, ...cells];
+    return [...cells, ...cells, ...cells, ...cells];
   }, [cells]);
 
   useEffect(() => {
-    const visibleWidth = 1440;
+    const visibleWidth = 1280;
     const totalCellWidth = cellWidth + gap;
     const winnerCellCenter = winnerIndex * totalCellWidth + cellWidth / 2;
     const targetOffset = winnerCellCenter - visibleWidth / 2;
@@ -46,28 +46,33 @@ export default function RouletteSlider({
   }, [winnerIndex, cells.length]);
 
   return (
-    <div className=" w-full">
-      <div className="absolute inset-y-0 left-1/2 w-1 border-l-4 border-yellow-300 z-10"></div>
+    <div className=" w-full overflow-hidden ">
+      <div className="absolute inset-y-0 left-1/2 w-1 border-l-8 h-6 border-yellow-300 z-10 "></div>
       <motion.ul
-        className="flex gap-2 animate-none py-[8px]"
+        className="flex gap-2 py-3 "
         initial={{ x: 0 }}
         animate={{ x: xOffset }}
         transition={{
           type: "spring",
-          stiffness: 15,
-          damping: 10,
+          stiffness: 11.5,
+          damping: 6.1,
           bounce: 0.2,
           duration: 8,
         }}
       >
-        {formatedCells.map((cell, index) => (
-          <li
-            key={`${Math.floor(index / cells.length)}-${cell.id}`}
-            className={clsx(" rounded-[8px] flex items-center justify-center ")}
-          >
-            {iconMap[cell.color] ?? placeholderChips}
-          </li>
-        ))}
+        {formatedCells.map((cell, index) => {
+          // const isWinner = cell.id === winner.id;
+          return (
+            <li
+              key={`${Math.floor(index / cells.length)}-${cell.id}`}
+              className={clsx(
+                `rounded-[8px] flex items-center justify-center w-[100px] h-[100px] `
+              )}
+            >
+              {iconMap[cell.color] ?? placeholderChips}
+            </li>
+          );
+        })}
       </motion.ul>
     </div>
   );
