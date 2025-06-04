@@ -22,8 +22,9 @@ export default async function fetchRouletteData(): Promise<FetchRouletteResult> 
 
     const sequence: Cell[] = (data?.sequence as Cell[]) || [];
     const winnerIndex = data?.winnerIndex;
+    const winner = data?.winner;
 
-    return { sequence, winnerIndex, error: null };
+    return { sequence, winnerIndex, winner, error: null };
   } catch (err: unknown) {
     console.error("Failed to fetch roulette data:", err);
 
