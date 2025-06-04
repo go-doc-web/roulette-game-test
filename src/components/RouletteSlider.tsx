@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { animate, motion } from "framer-motion";
+import { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import clsx from "clsx";
 import RedSvg from "./ui/RedSvg";
 import BlackSvg from "./ui/BlackSvg";
@@ -22,22 +22,47 @@ const placeholderChips = (
   </div>
 );
 
+const cellWidth = 100;
+const gap = 8;
+
 export default function RouletteSlider({
   cells,
   winnerIndex,
 }: RouletteSliderProps) {
+  const [xOffset, setXOffset] = useState<number>(0);
+
+  const formatedCells = useMemo(() => {
+    return [...cells, ...cells, ...cells];
+  }, [cells]);
+
+  useEffect(() => {
+    const visibleWidth = 1440;
+    const totalCellWidth = cellWidth + gap;
+    const winnerCellCenter = winnerIndex * totalCellWidth + cellWidth / 2;
+    const targetOffset = winnerCellCenter - visibleWidth / 2;
+    const extraSpins = cells.length * 2 * totalCellWidth;
+
+    setXOffset(-(extraSpins + targetOffset));
+  }, [winnerIndex, cells.length]);
+
   return (
-    <div className="relative w-full  ">
+    <div className=" w-full">
       <div className="absolute inset-y-0 left-1/2 w-1 border-l-4 border-yellow-300 z-10"></div>
       <motion.ul
         className="flex gap-2 animate-none py-[8px]"
         initial={{ x: 0 }}
-        animate={{ x: -1440 }}
-        transition={{ duration: 5, ease: "easeInOut" }}
+        animate={{ x: xOffset }}
+        transition={{
+          type: "spring",
+          stiffness: 15,
+          damping: 10,
+          bounce: 0.2,
+          duration: 8,
+        }}
       >
-        {cells.map((cell) => (
+        {formatedCells.map((cell, index) => (
           <li
-            key={cell.id}
+            key={`${Math.floor(index / cells.length)}-${cell.id}`}
             className={clsx(" rounded-[8px] flex items-center justify-center ")}
           >
             {iconMap[cell.color] ?? placeholderChips}
@@ -47,5 +72,3 @@ export default function RouletteSlider({
     </div>
   );
 }
-
-/* overflow-hidden */

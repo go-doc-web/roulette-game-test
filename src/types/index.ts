@@ -9,12 +9,14 @@ export const ROULETTE_COLORS = [
 export type CellColor = (typeof ROULETTE_COLORS)[number];
 
 export type Cell = {
-  id: number;
+  id: string;
   color: CellColor;
 };
 
+export type WinnerIndex = number;
+
 export interface RouletteSliderProps {
   cells: Cell[];
-  winnerIndex: number;
+  winnerIndex: WinnerIndex;
   error?: string | null; // залишу поки так
 }

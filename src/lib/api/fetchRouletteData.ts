@@ -1,8 +1,8 @@
-import { Cell } from "../../types/index";
+import { Cell, WinnerIndex } from "../../types/index";
 
 interface FetchRouletteResult {
   sequence: Cell[];
-  winnerIndex: number | null;
+  winnerIndex: WinnerIndex;
   error: string | null;
 }
 
@@ -19,7 +19,7 @@ export default async function fetchRouletteData(): Promise<FetchRouletteResult> 
       throw new Error(`Failed to fetch roulette data. Status: ${res.status}`);
     }
     const data = await res.json();
-    console.log("data", data);
+
     const sequence: Cell[] = (data?.sequence as Cell[]) || [];
     const winnerIndex = data?.winnerIndex;
 

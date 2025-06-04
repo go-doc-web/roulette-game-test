@@ -4,10 +4,12 @@ import fetchRouletteData from "../lib/api/fetchRouletteData";
 export default async function Home() {
   const { sequence, winnerIndex } = await fetchRouletteData();
 
+  console.log("data", sequence[winnerIndex]);
+
   return (
-    <main className="w-[100wh] h-[100vh] bg-[var(--dark-1)] ">
+    <main className="w-full h-[100vh]  ">
       <section className="py-4 ">
-        <div className="w-[1440px] px-[1rem] mx-auto overflow-hidden ">
+        <div className="w-[1440px]  mx-auto overflow-hidden relative ">
           <RouletteSlider cells={sequence} winnerIndex={winnerIndex} />
         </div>
       </section>
