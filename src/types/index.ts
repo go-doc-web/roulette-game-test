@@ -18,6 +18,6 @@ export type WinnerIndex = number;
 export interface RouletteSliderProps {
   cells: Cell[];
   winnerIndex: WinnerIndex;
-  winner: Cell;
+
   error?: string | null; // залишу поки так
 }

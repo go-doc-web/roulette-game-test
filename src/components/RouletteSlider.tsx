@@ -28,7 +28,6 @@ const gap = 8;
 export default function RouletteSlider({
   cells,
   winnerIndex,
-  winner,
 }: RouletteSliderProps) {
   const [xOffset, setXOffset] = useState<number>(0);
 
