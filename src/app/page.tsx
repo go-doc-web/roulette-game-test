@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import RouletteSlider from "../components/RouletteSlider";
 import fetchRouletteData from "../lib/api/fetchRouletteData";
 import { Cell } from "@/types";
