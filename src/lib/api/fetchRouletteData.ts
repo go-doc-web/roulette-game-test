@@ -1,7 +1,8 @@
-import { Cell } from "../../types/index";
+import { Cell, WinnerIndex } from "../../types/index";
 
 interface FetchRouletteResult {
   sequence: Cell[];
+  winnerIndex: WinnerIndex;
   error: string | null;
 }
 
@@ -18,9 +19,11 @@ export default async function fetchRouletteData(): Promise<FetchRouletteResult> 
       throw new Error(`Failed to fetch roulette data. Status: ${res.status}`);
     }
     const data = await res.json();
-    const sequence: Cell[] = (data?.sequence as Cell[]) || [];
 
-    return { sequence, error: null };
+    const sequence: Cell[] = (data?.sequence as Cell[]) || [];
+    const winnerIndex = data?.winnerIndex;
+
+    return { sequence, winnerIndex, error: null };
   } catch (err: unknown) {
     console.error("Failed to fetch roulette data:", err);
 
@@ -35,6 +38,7 @@ export default async function fetchRouletteData(): Promise<FetchRouletteResult> 
     }
     return {
       sequence: [],
+      winnerIndex: 0,
       error: errorMessage,
     };
   }
