@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 import { useState, useEffect, useRef } from "react";
 import RouletteSlider from "../components/RouletteSlider";
@@ -87,7 +86,7 @@ export default function Home() {
     <main className="w-full h-[100vh] ">
       <section className="py-4 ">
         <div
-          className={`mx-auto relative z-30`} // Базові класи для головного контейнера рулетки
+          className={`mx-auto relative z-30`}
           style={
             {
               width: ROULETTE_CONTAINER_MAX_WIDTH_PX,
