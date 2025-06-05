@@ -64,8 +64,9 @@ export default function Home() {
     <main className="w-full h-[100vh] ">
       <section className="py-4 ">
         <div
-          className={`w-[${ROULETTE_CONTAINER_MAX_WIDTH_PX}px] mx-auto relative z-30 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0  after:top-0
+          className={` mx-auto relative z-30 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0  after:top-0
                  after:bg-[var(--bg-list)]`}
+          style={{ width: ROULETTE_CONTAINER_MAX_WIDTH_PX }}
         >
           <RouletteSlider cells={cells} winnerIndex={winnerIndex} />
         </div>
