@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import RouletteSlider from "../components/RouletteSlider";
+import DivContainer from "@/components/DivContainer";
+import Button from "@/components/Button";
 import fetchRouletteData from "../lib/api/fetchRouletteData";
 import {
   ROULETTE_UPDATE_INTERVAL_MS,
@@ -108,18 +110,18 @@ export default function Home() {
 
   return (
     <main className="w-full h-[100vh] ">
-      <div
-        style={{ width: ROULETTE_CONTAINER_MAX_WIDTH_PX }}
+      <DivContainer
+        width={ROULETTE_CONTAINER_MAX_WIDTH_PX}
         className="pt-4 mx-auto"
       >
-        <button
+        <Button
           onClick={() => setAudioEnabled((prev) => !prev)}
           className="cursor-pointer py-1 px-2 rounded-sm text-stone-200 bg-[#000] block "
           type="button"
         >
           {audioEnabled ? "🔊" : "🔇"}
-        </button>
-      </div>
+        </Button>
+      </DivContainer>
       <audio ref={audioRef} src="/sounds/blink.mp3" preload="auto" />
       <section className="py-4 ">
         <div
