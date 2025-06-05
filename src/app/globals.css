@@ -20,3 +20,27 @@
 body {
   margin: 0;
 }
+
+.progress-animate::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  border-radius: 12px;
+  background-color: orange;
+  transform-origin: left;
+  animation: decreaseProgress var(--progress-duration) linear forwards;
+  z-index: 5;
+}
+
+@keyframes decreaseProgress {
+  from {
+    transform: scaleX(1);
+  }
+  to 50% {
+    transform: scaleX(0.5);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
