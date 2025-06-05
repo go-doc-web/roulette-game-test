@@ -171,9 +171,10 @@ export default function RouletteSlider({
               transition={
                 isWinnerCell
                   ? {
+                      delay: 0.5,
                       duration: PULSE_ANIMATION_DURATION_MS / 1000,
-                      ease: "easeInOut",
-                      times: [0, 0.2, 0.7, 1],
+                      ease: "linear",
+                      times: [0, 0.2, 0.9, 1],
                     }
                   : { duration: 0.1 }
               }
