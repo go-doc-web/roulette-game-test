@@ -30,10 +30,12 @@ const gap = 8;
 export default function RouletteSlider({
   cells,
   winnerIndex,
+  onFinish,
 }: RouletteSliderProps) {
   const prevWinnerIndexRef = useRef<number | null>(null);
 
-  // Використовуємо стан для управління цільовою позицією та "скиданням" анімації
+  const pulseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const [animationProps, setAnimationProps] = useState<{
     initialX: number;
     targetX: number;
@@ -59,7 +61,11 @@ export default function RouletteSlider({
   }, [cells]);
 
   useEffect(() => {
-    // Якщо немає фішок, або переможець не визначений, виходимо
+    if (pulseTimeoutRef.current) {
+      clearTimeout(pulseTimeoutRef.current);
+      pulseTimeoutRef.current = null;
+    }
+
     if (
       !cells.length ||
       winnerIndex === null ||
@@ -68,81 +74,63 @@ export default function RouletteSlider({
     ) {
       return;
     }
-    // Якщо winnerIndex не змінився з попереднього разу, не запускаємо анімацію
+
     if (winnerIndex === prevWinnerIndexRef.current) {
       return;
     }
 
-    prevWinnerIndexRef.current = winnerIndex; // Оновлюємо посилання на поточний winnerIndex для наступної аниме
+    prevWinnerIndexRef.current = winnerIndex;
     setHighlightedWinnerIndex(null);
 
-    const totalCellWidth = cellWidth + gap; // Ширини однієї  фішки + проміжок
-
-    // --- Логіка для розрахунку `initialX` (стартової позиції) та `targetX` (кінцевої позиції) ---
-    // 4. Визначення початкової позиції анімації
-    // 'startRepetitionIndex' - це індекс "копії" масиву 'cells' у 'formatedCells', з якої ми хочемо розпочати анімацію.
-    // Наприклад, '3' означає, що анімація розпочнеться з 4-ї копії 'cells' (індексація з 0).
+    const totalCellWidth = cellWidth + gap;
     const startRepetitionIndex = 3;
-
-    // 'initialPositionOffset' - це абсолютне зміщення в пікселях до початку цієї 'startRepetitionIndex' копії.
     const initialPositionOffset =
       cells.length * startRepetitionIndex * totalCellWidth;
-
-    // 'newInitialXCalculated' - це координата X, куди рулетка буде миттєво "телепортована" на початку.
-    // Від'ємне значення означає зміщення вліво. Це точка, з якої почнеться анімація.
     const newInitialXCalculated = -initialPositionOffset;
-
-    // Визначення кінцевої позиції анімації (де зупиниться переможець)
-    // 'targetRepetitionIndex' - це індекс "копії" масиву 'cells', в якій має зупинитися переможець.
-    // Наприклад, '6' означає 7-у копію 'cells'. Це гарантує достатньо "обертів" рулетки.
     const targetRepetitionIndex = 6;
-
-    // 'winnerAbsoluteIndexInDuplicated' - це абсолютний індекс виграшної фішки в усьому довгому 'formatedCells'.
-    // Ми додаємо 'winnerIndex' до початку цільової копії.
     const winnerAbsoluteIndexInDuplicated =
       cells.length * targetRepetitionIndex + winnerIndex;
-
-    // це абсолютна позиція центру виграшної фішки в пікселях від початку 'formatedCells'.
     const winnerCellCenterAbsolute =
       winnerAbsoluteIndexInDuplicated * totalCellWidth + cellWidth / 2;
-
-    //'newTargetXCalculated' - це координата X, де рулетка має зупинитися, щоб виграшна фішка
-    // була точно по центру 'visibleWidth' (ширини видимої області).
-    // `visibleWidth / 2` - це половина ширини контейнера, щоб відцентрувати.
     const newTargetXCalculated = -(
       winnerCellCenterAbsolute -
       containerWidth / 2
     );
 
-    // 6. Оновлення стану, що запускає анімацію через перемонтирование
-    // 'setAnimationProps' оновлює стан компонента.
-    setAnimationProps((prev) => ({
-      initialX: newInitialXCalculated,
-      targetX: newTargetXCalculated,
-      // 'key': Збільшуємо 'key' на 1. Це критично!
-      // Коли 'key' змінюється, React вважає, що це абсолютно новий елемент <motion.ul>.
-      // Він повністю видаляє старий <motion.ul> з DOM і вставляє новий.
-      // Це примусове перемонтирование компонента <motion.ul>, що, в свою чергу,
-      // змушує Framer Motion запускати анімацію знову від 'initialX' до 'targetX'.
-      key: prev.key + 1, // Меняем ключ для перезапуска анимации
-    }));
+    setAnimationProps((prev) => {
+      return {
+        initialX: newInitialXCalculated,
+        targetX: newTargetXCalculated,
+        key: prev.key + 1,
+      };
+    });
+
+    return () => {
+      if (pulseTimeoutRef.current) {
+        clearTimeout(pulseTimeoutRef.current);
+      }
+    };
   }, [winnerIndex, cells.length, cells, containerWidth]);
 
   const handleRouletteAnimationComplete = () => {
     setHighlightedWinnerIndex(winnerIndex);
 
-    const timeoutId = setTimeout(() => {
-      setHighlightedWinnerIndex(null);
-    }, PULSE_ANIMATION_DURATION_MS + 100);
+    const totalPulseDuration = 500 + PULSE_ANIMATION_DURATION_MS;
 
-    return () => clearTimeout(timeoutId);
+    pulseTimeoutRef.current = setTimeout(() => {
+      setHighlightedWinnerIndex(null);
+      if (onFinish) {
+        onFinish();
+      }
+      pulseTimeoutRef.current = null;
+    }, totalPulseDuration);
   };
 
   return (
     <div ref={containerRef} className="w-full overflow-hidden">
       <div className="absolute inset-y-0 left-1/2 w-1 border-l-8 h-6 border-yellow-300 z-10 -translate-x-1/2"></div>
       <motion.ul
-        key={animationProps.key} // **Ключ для принудительного перезапуска анимации!**
+        key={animationProps.key}
         className="flex gap-2 py-3"
         initial={{ x: animationProps.initialX }}
         animate={{ x: animationProps.targetX }}
