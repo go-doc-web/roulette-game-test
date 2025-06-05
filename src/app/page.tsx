@@ -17,7 +17,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [isRolling, setIsRolling] = useState<boolean>(false);
   const [showProgress, setShowProgress] = useState<boolean>(false);
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
   const [audioAllowed, setAudioAllowed] = useState<boolean>(false);
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
