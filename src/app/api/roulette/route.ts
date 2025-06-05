@@ -10,7 +10,6 @@ export async function GET() {
   }
 
   const winnerIndex = Math.floor(Math.random() * sequence.length);
-  const winner = sequence[winnerIndex];
 
-  return NextResponse.json({ sequence, winnerIndex, winner });
+  return NextResponse.json({ sequence, winnerIndex });
 }

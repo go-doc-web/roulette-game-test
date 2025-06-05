@@ -87,21 +87,32 @@ export default function Home() {
     <main className="w-full h-[100vh] ">
       <section className="py-4 ">
         <div
-          className={`mx-auto relative z-30 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0  after:top-0
-                     after:bg-[var(--bg-list)] ${
-                       showProgress ? "progress-animate" : ""
-                     }`}
+          className={`mx-auto relative z-30`} // Базові класи для головного контейнера рулетки
           style={
             {
               width: ROULETTE_CONTAINER_MAX_WIDTH_PX,
 
-              "--progress-width": showProgress ? "100%" : "0%",
               "--progress-duration": `${ROULETTE_UPDATE_INTERVAL_MS / 1000}s`,
+
               opacity: isRolling ? 1 : 0.8,
               transition: "opacity 0.3s ease-in-out",
             } as React.CSSProperties
           }
         >
+          <div className="absolute inset-0 bg-[var(--bg-mask)] pointer-events-none z-10"></div>
+
+          <div
+            className={`absolute bottom-[-5px] left-0 w-full h-1 bg-yellow-500 z-20`}
+            style={
+              {
+                transformOrigin: "left",
+                transform: showProgress ? "scaleX(0)" : "scaleX(1)",
+                transition: `transform var(--progress-duration) linear`,
+                opacity: showProgress ? 1 : 0,
+              } as React.CSSProperties
+            }
+          ></div>
+
           <RouletteSlider
             cells={cells}
             winnerIndex={winnerIndex}
