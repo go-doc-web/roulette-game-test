@@ -13,9 +13,12 @@ export default function Home() {
   const [winnerIndex, setWinnerIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isRolling, setIsRolling] = useState(false);
-  const [showProgress, setShowProgress] = useState(false);
+  const [isRolling, setIsRolling] = useState<boolean>(false);
+  const [showProgress, setShowProgress] = useState<boolean>(false);
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
+  const [audioAllowed, setAudioAllowed] = useState<boolean>(false);
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const loadData = async (): Promise<void> => {
     setIsLoading(true);
@@ -50,6 +53,15 @@ export default function Home() {
     }, ROULETTE_UPDATE_INTERVAL_MS);
   };
 
+  const safePlayAudio = () => {
+    if (audioEnabled && audioAllowed && audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch((e) => {
+        console.error("Error playing sound:", e);
+      });
+    }
+  };
+
   useEffect(() => {
     if (!cells.length && winnerIndex === null && !isLoading && !error) {
       loadData();
@@ -67,7 +79,19 @@ export default function Home() {
       setIsRolling(true);
       setShowProgress(false);
     }
+
+    safePlayAudio();
   }, [cells, winnerIndex, isLoading]);
+
+  useEffect(() => {
+    const handleIteraction = () => {
+      setAudioAllowed(true);
+    };
+    window.addEventListener("click", handleIteraction, { once: true });
+    return () => {
+      window.removeEventListener("click", handleIteraction);
+    };
+  }, []);
 
   if (isLoading && (!cells.length || winnerIndex === null)) {
     return <p className="text-white text-center mt-10">Loading...</p>;
@@ -84,6 +108,19 @@ export default function Home() {
 
   return (
     <main className="w-full h-[100vh] ">
+      <div
+        style={{ width: ROULETTE_CONTAINER_MAX_WIDTH_PX }}
+        className="pt-4 mx-auto"
+      >
+        <button
+          onClick={() => setAudioEnabled((prev) => !prev)}
+          className="cursor-pointer py-1 px-2 rounded-sm text-stone-200 bg-[#000] block "
+          type="button"
+        >
+          {audioEnabled ? "🔊" : "🔇"}
+        </button>
+      </div>
+      <audio ref={audioRef} src="/sounds/blink.mp3" preload="auto" />
       <section className="py-4 ">
         <div
           className={`mx-auto relative z-30 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:top-0
