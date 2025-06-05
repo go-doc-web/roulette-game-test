@@ -64,7 +64,6 @@ export default function RouletteSlider({
     if (pulseTimeoutRef.current) {
       clearTimeout(pulseTimeoutRef.current);
       pulseTimeoutRef.current = null;
-      console.log("RouletteSlider: Cleared previous pulse timeout.");
     }
 
     if (
@@ -73,25 +72,15 @@ export default function RouletteSlider({
       winnerIndex === undefined ||
       containerWidth === 0
     ) {
-      console.log(
-        "RouletteSlider useEffect: Missing data or containerWidth is 0. Returning."
-      );
       return;
     }
 
     if (winnerIndex === prevWinnerIndexRef.current) {
-      console.log(
-        "RouletteSlider useEffect: winnerIndex is same as previous. Skipping animation."
-      );
       return;
     }
 
     prevWinnerIndexRef.current = winnerIndex;
     setHighlightedWinnerIndex(null);
-    console.log(
-      "RouletteSlider: Starting new spin animation calculation for winnerIndex",
-      winnerIndex
-    );
 
     const totalCellWidth = cellWidth + gap;
     const startRepetitionIndex = 3;
@@ -109,10 +98,6 @@ export default function RouletteSlider({
     );
 
     setAnimationProps((prev) => {
-      console.log(
-        "RouletteSlider: Updating animationProps, new key will be",
-        prev.key + 1
-      );
       return {
         initialX: newInitialXCalculated,
         targetX: newTargetXCalculated,
@@ -123,27 +108,16 @@ export default function RouletteSlider({
     return () => {
       if (pulseTimeoutRef.current) {
         clearTimeout(pulseTimeoutRef.current);
-        console.log("RouletteSlider: Cleared pulse timeout on unmount/re-run.");
       }
     };
   }, [winnerIndex, cells.length, cells, containerWidth]);
 
   const handleRouletteAnimationComplete = () => {
-    console.log(
-      "RouletteSlider: Main spin animation COMPLETE for winnerIndex",
-      winnerIndex
-    );
     setHighlightedWinnerIndex(winnerIndex);
 
     const totalPulseDuration = 500 + PULSE_ANIMATION_DURATION_MS;
-    console.log(
-      "RouletteSlider: Setting pulse timeout for",
-      totalPulseDuration,
-      "ms"
-    );
 
     pulseTimeoutRef.current = setTimeout(() => {
-      console.log("RouletteSlider: Pulse timeout triggered. Calling onFinish.");
       setHighlightedWinnerIndex(null);
       if (onFinish) {
         onFinish();
