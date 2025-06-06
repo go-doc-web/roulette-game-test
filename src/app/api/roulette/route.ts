@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+// import prisma from "@/lib/prisma";
 import buildCells from "../../../lib/buildCells";
 import { rouletteSequence } from "../../../lib/rouletteSequence";
 import {
