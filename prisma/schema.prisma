@@ -13,3 +13,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model GameRound {
+  id         String    @id @default(uuid())
+  number     Int
+  color      String
+  timestamp  DateTime  @default(now()) 
+}
