@@ -74,6 +74,7 @@ export default function Home() {
         clearTimeout(updateTimeoutRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -83,6 +84,7 @@ export default function Home() {
     }
 
     safePlayAudio();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cells, winnerIndex, isLoading]);
 
   useEffect(() => {
