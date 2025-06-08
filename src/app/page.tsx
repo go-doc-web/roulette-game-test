@@ -1,18 +1,24 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import RouletteSlider from "../components/RouletteSlider";
 import DivContainer from "@/components/DivContainer";
 import Button from "@/components/Button";
-import fetchRouletteData from "../lib/api/fetchRouletteData";
+import fetchRouletteData, {
+  postGameRoundResult,
+} from "../lib/api/fetchRouletteData";
 import {
   ROULETTE_UPDATE_INTERVAL_MS,
   ROULETTE_CONTAINER_MAX_WIDTH_PX,
 } from "../constants";
-import { Cell } from "@/types";
+import { Cell, GameRoundRecord } from "@/types";
 
 export default function Home() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [winnerIndex, setWinnerIndex] = useState<number | null>(null);
+  const [winningNumber, setWinningNumber] = useState<number | null>(null);
+  const [winningColor, setWinningColor] = useState<
+    "red" | "black" | "green" | null
+  >(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isRolling, setIsRolling] = useState<boolean>(false);
@@ -22,50 +28,70 @@ export default function Home() {
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const loadData = async (): Promise<void> => {
+  const loadData = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
     setIsRolling(false);
     setShowProgress(false);
 
     try {
-      const { sequence, winnerIndex: newWinnerIndex } =
-        await fetchRouletteData();
+      const {
+        sequence,
+        winnerIndex: newWinnerIndex,
+        winningNumber,
+        winningColor,
+      } = await fetchRouletteData();
 
       setCells(sequence);
       setWinnerIndex(newWinnerIndex);
+      setWinningNumber(winningNumber);
+      setWinningColor(winningColor);
     } catch (err) {
       console.error("Home: Failed to fetch roulette data:", err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const handleSpinFinish = (number: number, color: string) => {
-    setIsRolling(false);
-    setShowProgress(true);
+  const handleSpinFinish = useCallback(
+    async (number: number, color: "red" | "black" | "green") => {
+      setIsRolling(false);
+      setShowProgress(true);
 
-    if (updateTimeoutRef.current) {
-      clearTimeout(updateTimeoutRef.current);
-    }
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
 
-    console.log("number", number);
-    console.log("color", color);
+      console.log("number", number);
+      console.log("color", color);
 
-    updateTimeoutRef.current = setTimeout(() => {
-      loadData();
-      updateTimeoutRef.current = null;
-    }, ROULETTE_UPDATE_INTERVAL_MS);
-  };
+      try {
+        console.log(`[POST] Sending result: Number ${number}, Color ${color}`);
+        const result: GameRoundRecord = await postGameRoundResult(
+          number,
+          color
+        );
+        console.log("Game round result saved successfully:", result);
+      } catch (postError) {
+        console.error("Failed to save game round result:", postError);
+      }
 
-  const safePlayAudio = () => {
+      updateTimeoutRef.current = setTimeout(() => {
+        loadData();
+        updateTimeoutRef.current = null;
+      }, ROULETTE_UPDATE_INTERVAL_MS);
+    },
+    []
+  );
+
+  const safePlayAudio = useCallback(() => {
     if (audioEnabled && audioAllowed && audioRef.current) {
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch((e) => {
         console.error("Error playing sound:", e);
       });
     }
-  };
+  }, [audioAllowed, audioEnabled]);
 
   useEffect(() => {
     if (!cells.length && winnerIndex === null && !isLoading && !error) {
@@ -78,7 +104,7 @@ export default function Home() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loadData]);
 
   useEffect(() => {
     if (cells.length > 0 && winnerIndex !== null && isLoading === false) {
@@ -88,7 +114,7 @@ export default function Home() {
 
     safePlayAudio();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cells, winnerIndex, isLoading]);
+  }, [cells, winnerIndex, isLoading, safePlayAudio]);
 
   useEffect(() => {
     const handleIteraction = () => {
@@ -149,6 +175,8 @@ export default function Home() {
             cells={cells}
             winnerIndex={winnerIndex}
             onFinish={handleSpinFinish}
+            winningNumber={winningNumber}
+            winningColor={winningColor}
           />
         </div>
       </section>
