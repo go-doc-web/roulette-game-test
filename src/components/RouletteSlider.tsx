@@ -32,6 +32,7 @@ export default function RouletteSlider({
   winnerIndex,
   winningNumber,
   winningColor,
+  winningCellColor,
   onFinish,
   error,
 }: RouletteSliderProps) {
@@ -122,8 +123,13 @@ export default function RouletteSlider({
 
     pulseTimeoutRef.current = setTimeout(() => {
       setHighlightedWinnerIndex(null);
-      if (onFinish && winningNumber !== null && winningColor !== null) {
-        onFinish(winningNumber, winningColor);
+      if (
+        onFinish &&
+        winningNumber !== null &&
+        winningColor !== null &&
+        winningCellColor !== null
+      ) {
+        onFinish(winningNumber, winningColor, winningCellColor);
       }
       pulseTimeoutRef.current = null;
     }, totalPulseDuration);
