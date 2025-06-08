@@ -6,10 +6,17 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model GameRound {
+  id         String    @id @default(uuid())
+  number     Int
+  color      String
+  timestamp  DateTime  @default(now()) 
 }

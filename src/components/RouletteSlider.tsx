@@ -30,7 +30,10 @@ const gap = 8;
 export default function RouletteSlider({
   cells,
   winnerIndex,
+  winningNumber,
+  winningColor,
   onFinish,
+  error,
 }: RouletteSliderProps) {
   const prevWinnerIndexRef = useRef<number | null>(null);
 
@@ -119,13 +122,28 @@ export default function RouletteSlider({
 
     pulseTimeoutRef.current = setTimeout(() => {
       setHighlightedWinnerIndex(null);
-      if (onFinish) {
-        onFinish();
+      if (onFinish && winningNumber !== null && winningColor !== null) {
+        onFinish(winningNumber, winningColor);
       }
       pulseTimeoutRef.current = null;
     }, totalPulseDuration);
   };
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-4 text-red-500">
+        {error}
+      </div>
+    );
+  }
+
+  if (cells.length === 0) {
+    return (
+      <div className="flex items-center justify-center p-4 text-gray-500">
+        Loading roulette...
+      </div>
+    );
+  }
   return (
     <div ref={containerRef} className="w-full overflow-hidden">
       <div className="absolute inset-y-0 left-1/2 w-1 border-l-8 h-6 border-yellow-300 z-10 -translate-x-1/2"></div>

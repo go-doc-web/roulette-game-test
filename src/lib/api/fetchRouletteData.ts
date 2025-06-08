@@ -1,15 +1,9 @@
-import { Cell, WinnerIndex } from "../../types/index";
-
-interface FetchRouletteResult {
-  sequence: Cell[];
-  winnerIndex: WinnerIndex;
-  error: string | null;
-}
+import { Cell, GameRoundRecord, RouletteApiResponse } from "../../types/index";
 
 const API_BASE_URL: string | undefined =
   process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
-export default async function fetchRouletteData(): Promise<FetchRouletteResult> {
+export default async function fetchRouletteData(): Promise<RouletteApiResponse> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/roulette`, {
       cache: "no-cache",
@@ -22,24 +16,35 @@ export default async function fetchRouletteData(): Promise<FetchRouletteResult> 
 
     const sequence: Cell[] = (data?.sequence as Cell[]) || [];
     const winnerIndex = data?.winnerIndex;
+    const winningNumber = data?.winningNumber;
+    const winningColor = data?.winningColor;
 
-    return { sequence, winnerIndex, error: null };
-  } catch (err: unknown) {
-    console.error("Failed to fetch roulette data:", err);
+    return { sequence, winnerIndex, winningNumber, winningColor, error: null };
+  } catch (error) {
+    console.error("Error in fetchRouletteData:", error);
+    throw error;
+  }
+}
 
-    let errorMessage: string;
-
-    if (err instanceof Error) {
-      errorMessage = err.message;
-    } else if (typeof err === "string") {
-      errorMessage = err;
-    } else {
-      errorMessage = "Failed to load roulette. Please try again later.";
+export async function postGameRoundResult(
+  number: number,
+  color: "red" | "black" | "green"
+): Promise<GameRoundRecord> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/roulette`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ number, color }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to post game round result");
     }
-    return {
-      sequence: [],
-      winnerIndex: 0,
-      error: errorMessage,
-    };
+    return await response.json();
+  } catch (error) {
+    console.error("Error in postGameRoundResult:", error);
+    throw error;
   }
 }
