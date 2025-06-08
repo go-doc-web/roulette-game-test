@@ -22,11 +22,6 @@ export async function GET() {
     const winningNumber = getRandomNumberForColor(winningCellColor);
     const winningColor = getDataBaseColor(winningCellColor);
 
-    console.log("winningCell", winningCell);
-    console.log("winningCellColor", winningCellColor);
-    console.log("winningNumber", winningNumber);
-    console.log("winningColor", winningColor);
-
     return NextResponse.json({
       sequence,
       winnerIndex,
