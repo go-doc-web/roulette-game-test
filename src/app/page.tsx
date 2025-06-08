@@ -10,12 +10,15 @@ import {
   ROULETTE_UPDATE_INTERVAL_MS,
   ROULETTE_CONTAINER_MAX_WIDTH_PX,
 } from "../constants";
-import { Cell, GameRoundRecord } from "@/types";
+import { Cell, GameRoundRecord, CellColor } from "@/types";
 
 export default function Home() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [winnerIndex, setWinnerIndex] = useState<number | null>(null);
   const [winningNumber, setWinningNumber] = useState<number | null>(null);
+  const [winningCellColor, setWinningCellColor] = useState<CellColor | null>(
+    null
+  );
   const [winningColor, setWinningColor] = useState<
     "red" | "black" | "green" | null
   >(null);
@@ -40,12 +43,14 @@ export default function Home() {
         winnerIndex: newWinnerIndex,
         winningNumber,
         winningColor,
+        winningCellColor,
       } = await fetchRouletteData();
 
       setCells(sequence);
       setWinnerIndex(newWinnerIndex);
       setWinningNumber(winningNumber);
       setWinningColor(winningColor);
+      setWinningCellColor(winningCellColor);
     } catch (err) {
       console.error("Home: Failed to fetch roulette data:", err);
     } finally {
@@ -54,7 +59,11 @@ export default function Home() {
   }, []);
 
   const handleSpinFinish = useCallback(
-    async (number: number, color: "red" | "black" | "green") => {
+    async (
+      number: number,
+      color: "red" | "black" | "green",
+      originalColor: CellColor
+    ) => {
       setIsRolling(false);
       setShowProgress(true);
 
@@ -62,14 +71,12 @@ export default function Home() {
         clearTimeout(updateTimeoutRef.current);
       }
 
-      console.log("number", number);
-      console.log("color", color);
-
       try {
         console.log(`[POST] Sending result: Number ${number}, Color ${color}`);
         const result: GameRoundRecord = await postGameRoundResult(
           number,
-          color
+          color,
+          originalColor
         );
         console.log("Game round result saved successfully:", result);
       } catch (postError) {
@@ -177,6 +184,7 @@ export default function Home() {
             onFinish={handleSpinFinish}
             winningNumber={winningNumber}
             winningColor={winningColor}
+            winningCellColor={winningCellColor}
           />
         </div>
       </section>

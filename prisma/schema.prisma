@@ -15,8 +15,9 @@ datasource db {
 }
 
 model GameRound {
-  id         String    @id @default(uuid())
-  number     Int
-  color      String
-  timestamp  DateTime  @default(now()) 
+  id            String    @id @default(uuid())
+  number        Int
+  color         String
+  originalColor String    @default("DEFAULT_COLOR")
+  timestamp     DateTime  @default(now()) 
 }

@@ -27,6 +27,7 @@ export async function GET() {
       winnerIndex,
       winningNumber,
       winningColor,
+      winningCellColor,
     });
   } catch (error) {
     console.error(
@@ -42,13 +43,17 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { number, color } = await request.json();
+    const { number, color, originalColor } = await request.json();
     if (
       typeof number !== "number" ||
       number < 0 ||
       number > 14 ||
       typeof color !== "string" ||
-      !["green", "red", "black"].includes(color)
+      !["green", "red", "black"].includes(color) ||
+      typeof originalColor !== "string" ||
+      !["green", "red", "black", "jockerBlack", "jockerRed"].includes(
+        originalColor
+      )
     ) {
       return NextResponse.json(
         {
@@ -65,6 +70,7 @@ export async function POST(request: Request) {
       data: {
         number,
         color,
+        originalColor,
       },
     });
 
