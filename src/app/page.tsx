@@ -41,13 +41,16 @@ export default function Home() {
     }
   };
 
-  const handleSpinFinish = () => {
+  const handleSpinFinish = (number: number, color: string) => {
     setIsRolling(false);
     setShowProgress(true);
 
     if (updateTimeoutRef.current) {
       clearTimeout(updateTimeoutRef.current);
     }
+
+    console.log("number", number);
+    console.log("color", color);
 
     updateTimeoutRef.current = setTimeout(() => {
       loadData();
