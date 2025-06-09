@@ -11,11 +11,11 @@ import { useContainerWidth } from "@/hooks/useContainerWidth";
 import { PULSE_ANIMATION_DURATION_MS } from "../constants/index";
 
 const iconMap = {
-  red: <RedSvg />,
-  black: <BlackSvg />,
-  green: <GreenSvg />,
-  jockerBlack: <JockerSvg color="var(--dark-4)" />,
-  jockerRed: <JockerSvg color="var(--fishka-red)" />,
+  red: <RedSvg width={100} height="auto" />,
+  black: <BlackSvg width={100} height="auto" />,
+  green: <GreenSvg width={100} height="auto" />,
+  jockerBlack: <JockerSvg width={100} height={100} color="var(--dark-4)" />,
+  jockerRed: <JockerSvg width={100} height={100} color="var(--fishka-red)" />,
 };
 
 const placeholderChips = (

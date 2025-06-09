@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import RouletteSlider from "../components/RouletteSlider";
 import DivContainer from "@/components/DivContainer";
+import BetPanel from "@/components/BetPanel";
 import Button from "@/components/Button";
 import fetchRouletteData, {
   postGameRoundResult,
@@ -161,6 +162,8 @@ export default function Home() {
         </Button>
       </DivContainer>
       <audio ref={audioRef} src="/sounds/blink.mp3" preload="auto" />
+
+      <BetPanel />
       <section className="py-4 ">
         <div
           className={`mx-auto relative z-30 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:top-0
